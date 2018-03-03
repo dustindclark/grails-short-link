@@ -25,6 +25,9 @@ repositories {
     maven { url "https://repo.grails.org/grails/core" }
 }
 
+project.ext.isSnapshot =  version.toString().endsWith("-SNAPSHOT")
+apply from:"publish.gradle"
+
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-logging"
     compile "org.springframework.boot:spring-boot-autoconfigure"
@@ -55,28 +58,4 @@ dependencies {
 bootRun {
     jvmArgs('-Dspring.output.ansi.enabled=always')
     addResources = true
-}
-// enable if you wish to package this plugin as a standalone application
-bootRepackage.enabled = false
-grailsPublish {
-    user = System.getenv("bamboo_BINTRAY_USER") ?: ''
-    key = System.getenv("bamboo_BINTRAY_PASSWORD") ?: ''
-    userOrg = 'captivatelabs'
-    //githubSlug = 'foo/bar'
-    license {
-        name = 'MIT'
-    }
-    title = "Short Link Plugin"
-    desc = "This plugin provides a mechanism for generating short links."
-    developers = [dustindclark: "Dustin D. Clark"]
-    portalUser = System.getenv("GRAILS_PORTAL_USER") ?: ''
-    portalPassword = System.getenv("GRAILS_PORTAL_PASSWORD") ?: ''
-    websiteUrl = 'http://www.captivatelabs.com'
-    vcsUrl = 'https://github.com/dustindclark/grails-google-analytics'
-    issueTrackerUrl = 'https://github.com/dustindclark/grails-google-analytics/issues'
-}
-
-
-assets {
-    packagePlugin = true
 }

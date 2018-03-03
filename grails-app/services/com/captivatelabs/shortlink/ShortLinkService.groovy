@@ -8,6 +8,8 @@ import grails.web.mapping.LinkGenerator
 import groovy.transform.CompileStatic
 import org.springframework.transaction.annotation.Propagation
 
+import javax.servlet.http.HttpServletRequest
+
 @CompileStatic
 class ShortLinkService implements GrailsConfigurationAware {
     LinkGenerator grailsLinkGenerator
@@ -42,7 +44,7 @@ class ShortLinkService implements GrailsConfigurationAware {
      * @param shortCode Short link code
      * @return
      */
-    String get(String shortCode, boolean trackClick = true) {
+    String get(String shortCode, HttpServletRequest request, boolean trackClick = true) {
         short checksumLength = checksumGenerator.checksumLength()
         String codeWithoutChecksum = shortCode
         String checksum = null
@@ -70,7 +72,7 @@ class ShortLinkService implements GrailsConfigurationAware {
         }
 
         if (trackClick) {
-            clickTracker.track(shortLink)
+            clickTracker.track(shortLink, request)
         }
 
         return shortLink.targetUrl

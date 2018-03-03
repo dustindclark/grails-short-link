@@ -15,7 +15,9 @@ package com.captivatelabs.shortlink
 
 import groovy.transform.CompileStatic
 
+import javax.servlet.http.HttpServletRequest
+
 @CompileStatic
 interface ClickTracker {
-    void track(ShortLink shortLink)
+    void track(ShortLink shortLink, HttpServletRequest request)
 }

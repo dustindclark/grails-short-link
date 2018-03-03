@@ -7,7 +7,7 @@ class ShortLinkGrailsPlugin extends Plugin {
 
     Closure doWithSpring() {
         { ->
-            checksumGenerator(DefaultChecksumGenerator)
+            checksumGenerator(NoChecksumGenerator)
             shortCodeGenerator(DefaultShortCodeGenerator)
             clickTracker(NoClickTracker)
         }
