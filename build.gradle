@@ -10,9 +10,7 @@ buildscript {
     }
 }
 
-String buildNumber = System.getenv('TRAVIS_BUILD_NUMBER') ?: System.getenv('bamboo_buildNumber') ?: '0-SNAPSHOT'
-
-version "0.1.${buildNumber}"
+version System.getenv('TRAVIS_TAG') ?: "${System.getenv('bamboo_version') ?: '0.1'}.${System.getenv('bamboo_buildNumber') ?: '0-SNAPSHOT'}"
 group "com.captivatelabs.grails.plugins"
 
 apply plugin: "eclipse"
