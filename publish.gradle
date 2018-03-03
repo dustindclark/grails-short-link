@@ -11,11 +11,6 @@ String artifactoryPassword = System.getenv("ARTIFACTORY_PASSWORD") ?: project.ha
 // enable if you wish to package this plugin as a standalone application
 bootRepackage.enabled = false
 
-
-assets {
-	packagePlugin = true
-}
-
 if(bintrayUser && bintrayUser) {
 	grailsPublish {
 		user = bintrayUser
