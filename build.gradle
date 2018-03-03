@@ -10,7 +10,7 @@ buildscript {
     }
 }
 
-version "${System.env['bamboo_version'] ?: '0.1'}.${System.env['bamboo_buildNumber'] ?: '0'}"
+version "0.1"
 group "com.captivatelabs.grails.plugins"
 
 apply plugin: "eclipse"

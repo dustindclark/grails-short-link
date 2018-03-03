@@ -3,6 +3,7 @@ package com.captivatelabs.shortlink
 import grails.testing.gorm.DataTest
 import grails.testing.services.ServiceUnitTest
 import grails.web.mapping.LinkGenerator
+import org.springframework.mock.web.MockHttpServletRequest
 import spock.lang.Specification
 
 class ShortLinkServiceSpec extends Specification implements ServiceUnitTest<ShortLinkService>, DataTest {
@@ -56,7 +57,7 @@ class ShortLinkServiceSpec extends Specification implements ServiceUnitTest<Shor
         service.shortCodeGenerator = Mock(ShortCodeGenerator)
 
         when:
-        String urlFromService = service.get('xyx', false)
+        String urlFromService = service.get('xyx', new MockHttpServletRequest(),false)
 
         then:
         urlFromService == targetUrl
@@ -80,7 +81,7 @@ class ShortLinkServiceSpec extends Specification implements ServiceUnitTest<Shor
         service.checksumGenerator.checksumLength() >> 1
         service.checksumGenerator.generate(_) >> { Long id -> return generatedChecksum }
         service.shortCodeGenerator.getId(_) >> { String parsedCode -> return (shortCode == parsedCode ? link.id : null) } //Awkward way to test short code parsing.
-        String result = service.get("${shortCode}${urlChecksum}", false)
+        String result = service.get("${shortCode}${urlChecksum}", new MockHttpServletRequest(),false)
 
         then:
         notThrown(Exception)
@@ -105,10 +106,10 @@ class ShortLinkServiceSpec extends Specification implements ServiceUnitTest<Shor
         service.clickTracker = Mock(ClickTracker)
 
         when:
-        service.get('xyx')
+        service.get('xyx', new MockHttpServletRequest())
 
         then:
-        1 * service.clickTracker.track(_)
+        1 * service.clickTracker.track(_, _)
         1 * service.checksumGenerator.checksumLength() >> 0
         1 * service.shortCodeGenerator.getId(_) >> link.id
     }
