@@ -12,7 +12,7 @@ class ShortLinkController implements GrailsConfigurationAware {
 
     def index() {
         if (!params.id) {
-            log.warn "No id parameter in short link controller.  Redirecting to grails.serverURL..."
+            log.debug "No id parameter in short link controller.  Redirecting to grails.serverURL..."
             if (defaultServerUrl) {
                 redirect(url: defaultServerUrl, permanent: true)
                 return
