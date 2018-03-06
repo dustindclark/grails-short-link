@@ -3,7 +3,6 @@ package com.captivatelabs.shortlink
 import grails.config.Config
 import grails.core.support.GrailsConfigurationAware
 import groovy.transform.CompileStatic
-import org.springframework.http.HttpStatus
 
 @CompileStatic
 class ShortLinkController implements GrailsConfigurationAware {
@@ -25,7 +24,8 @@ class ShortLinkController implements GrailsConfigurationAware {
             String url = shortLinkService.get((String) params.id, request)
             redirect(url: url, permanent: redirectPermanent)
         } catch (Exception ex) {
-            response.sendError(HttpStatus.NOT_FOUND.value(), "Link code ${params.id} not found.")
+            log.warn("Link code ${params.id} not found.", ex)
+            redirect(url: "${defaultServerUrl}?msg=shortCode.notFound")
         }
     }
 
