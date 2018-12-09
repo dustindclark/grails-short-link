@@ -67,7 +67,7 @@ class ShortLinkService implements GrailsConfigurationAware {
         ShortLink.withNewSession {
             shortLink = ShortLink.get(id)
             if (!shortLink) {
-                throw new Exception("Short link not found for short code ${shortCode} which generated ID ${id}")
+                throw new ShortLinkNotFoundException("Short link not found for short code ${shortCode} which generated ID ${id}")
             }
         }
 
