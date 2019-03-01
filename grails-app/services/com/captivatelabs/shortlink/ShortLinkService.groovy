@@ -24,18 +24,24 @@ class ShortLinkService implements GrailsConfigurationAware {
      * @param targetUrl URL that short link will redirect to
      * @return
      */
-    @Transactional(propagation = Propagation.NEVER)
     String create(String targetUrl) {
-        ShortLink shortLink
-        ShortLink.withTransaction {
-            shortLink = new ShortLink(targetUrl: targetUrl)
-            shortLink.save(flush: true, failOnError: true)
-        }
+        ShortLink shortLink = save(targetUrl)
+        return getShortUrl(shortLink)
+    }
+
+    String getShortUrl(ShortLink shortLink) {
         String shortCode = shortCodeGenerator.generate(shortLink.id)
         if (baseUrl) {
             return "${baseUrl}${shortCode}"
         }
         return grailsLinkGenerator.link(controller: 'shortLink', id: shortCode, absolute: true)
+    }
+
+    @Transactional
+    ShortLink save(String targetUrl) {
+        ShortLink shortLink = new ShortLink(targetUrl: targetUrl)
+        shortLink.save(flush: true, failOnError: true)
+        return shortLink
     }
 
     /**

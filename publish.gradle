@@ -36,7 +36,7 @@ if(isSnapshot && artifactoryUsername && artifactoryPassword) {
 	publishing {
 		repositories {
 			maven {
-				url "http://repo.dir.captivatelabs.com/grails-plugins"
+				url "https://repo.captivatelabs.com/grails-plugins"
 				credentials {
 					username artifactoryUsername
 					password artifactoryPassword
