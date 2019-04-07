@@ -2,24 +2,22 @@ package com.captivatelabs.shortlink
 
 import grails.config.Config
 import grails.core.support.GrailsConfigurationAware
+import grails.web.mapping.LinkGenerator
 import groovy.transform.CompileStatic
 import org.springframework.http.HttpStatus
 
 @CompileStatic
 class ShortLinkController implements GrailsConfigurationAware {
     ShortLinkService shortLinkService
+    LinkGenerator grailsLinkGenerator
     boolean redirectPermanent
     String defaultServerUrl
 
     def index() {
         if (!params.id) {
-            log.debug "No id parameter in short link controller.  Redirecting to grails.serverURL..."
-            if (defaultServerUrl) {
-                redirect(url: defaultServerUrl, permanent: true)
-                return
-            } else {
-                throw new Exception("No id parameter in short link controller and no config specified for grails.serverURL.  Not sure what to do...")
-            }
+            log.debug "No id parameter in short link controller.  Redirecting to ${defaultServerUrl}..."
+            redirect(url: defaultServerUrl, permanent: true)
+            return
         }
         try {
             String url = shortLinkService.get((String) params.id, request)
@@ -51,6 +49,6 @@ class ShortLinkController implements GrailsConfigurationAware {
     @Override
     void setConfiguration(Config co) {
         redirectPermanent = co.getOrDefault('com.captivatelabs.shortlink.redirectPermanent', false)
-        defaultServerUrl = co.getOrDefault('grails.serverURL', null)
+        defaultServerUrl = grailsLinkGenerator.serverBaseURL
     }
 }

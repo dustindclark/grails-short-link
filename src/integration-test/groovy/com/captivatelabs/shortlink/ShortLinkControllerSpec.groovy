@@ -3,6 +3,7 @@ package com.captivatelabs.shortlink
 import grails.core.GrailsApplication
 import grails.testing.mixin.integration.Integration
 import grails.util.GrailsWebMockUtil
+import grails.web.mapping.LinkGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.context.WebApplicationContext
@@ -13,6 +14,7 @@ import spock.lang.Specification
 class ShortLinkControllerSpec extends Specification {
     GrailsApplication grailsApplication
     ShortLinkService shortLinkService
+    LinkGenerator grailsLinkGenerator
 
     @Autowired
     WebApplicationContext ctx
@@ -22,6 +24,7 @@ class ShortLinkControllerSpec extends Specification {
     def setup() {
         GrailsWebMockUtil.bindMockWebRequest(ctx)
         controller.shortLinkService = shortLinkService
+        controller.grailsLinkGenerator = grailsLinkGenerator
     }
 
     def cleanup() {
