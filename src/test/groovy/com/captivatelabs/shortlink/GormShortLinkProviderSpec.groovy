@@ -4,7 +4,7 @@ import grails.testing.gorm.DataTest
 import grails.testing.services.ServiceUnitTest
 import spock.lang.Specification
 
-class DomainShortLinkProviderSpec extends Specification implements ServiceUnitTest<GormShortLinkProvider>, DataTest {
+class GormShortLinkProviderSpec extends Specification implements ServiceUnitTest<GormShortLinkProvider>, DataTest {
 
     GormShortLinkProvider provider
 
@@ -19,7 +19,7 @@ class DomainShortLinkProviderSpec extends Specification implements ServiceUnitTe
     def "test short link creation"() {
         when:
         String targetUrl = 'https://www.captivatelabs.com'
-        provider.getId(targetUrl)
+        provider.create(targetUrl)
 
         then:
         ShortLink.findByTargetUrl(targetUrl)
@@ -32,8 +32,8 @@ class DomainShortLinkProviderSpec extends Specification implements ServiceUnitTe
         link.save(flush: true)
 
         when:
-        String urlFromService = provider.resolveShortLink(link.id)
-        long idFromService = provider.getId(targetUrl)
+        String urlFromService = provider.resolve(link.id)
+        long idFromService = provider.create(targetUrl)
 
 
         then:

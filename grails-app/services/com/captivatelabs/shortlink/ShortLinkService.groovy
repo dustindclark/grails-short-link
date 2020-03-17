@@ -24,7 +24,7 @@ class ShortLinkService implements GrailsConfigurationAware {
      * @return
      */
     String create(String targetUrl) {
-        long id = shortLinkProvider.getId(targetUrl)
+        long id = shortLinkProvider.create(targetUrl)
         return getShortUrl(id)
     }
 
@@ -62,7 +62,7 @@ class ShortLinkService implements GrailsConfigurationAware {
             }
         }
         try {
-            String targetUrl = shortLinkProvider.resolveShortLink(id)
+            String targetUrl = shortLinkProvider.resolve(id)
 
             if (trackClick) {
                 clickTracker.track(id, targetUrl, request)

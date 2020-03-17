@@ -6,13 +6,13 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class GormShortLinkProvider implements ShortLinkProvider {
     @Override
-    long getId(String targetUrl) {
-        ShortLink link = save(targetUrl)
+    long create(String targetUrl) {
+        ShortLink link = saveShortLink(targetUrl)
         return link.id.toLong()
     }
 
     @Override
-    String resolveShortLink(long id) throws ShortLinkNotFoundException {
+    String resolve(long id) throws ShortLinkNotFoundException {
         ShortLink shortLink
         ShortLink.withNewSession {
             shortLink = ShortLink.get(id)
@@ -24,7 +24,7 @@ class GormShortLinkProvider implements ShortLinkProvider {
     }
 
     @Transactional
-    private ShortLink save(String targetUrl) {
+    private ShortLink saveShortLink(String targetUrl) {
         ShortLink shortLink = new ShortLink(targetUrl: targetUrl)
         shortLink.save(flush: true, failOnError: true)
         return shortLink

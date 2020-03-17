@@ -30,7 +30,7 @@ class ShortLinkServiceSpec extends Specification implements ServiceUnitTest<Shor
         shortUrl.endsWith(MOCK_CODE)
         1 * service.shortCodeGenerator.generate(_) >> MOCK_CODE
         1 * service.grailsLinkGenerator.link(_) >> { Map attrs -> return "http://cl.co/${attrs.id}" }
-        1 * service.shortLinkProvider.getId(_) >> MOCK_ID
+        1 * service.shortLinkProvider.create(_) >> MOCK_ID
     }
 
     def "test short link creation with base url"() {
@@ -47,7 +47,7 @@ class ShortLinkServiceSpec extends Specification implements ServiceUnitTest<Shor
         then:
         shortUrl == "${baseUrl}/${MOCK_CODE}"
         1 * service.shortCodeGenerator.generate(_) >> MOCK_CODE
-        1 * service.shortLinkProvider.getId(_) >> MOCK_ID
+        1 * service.shortLinkProvider.create(_) >> MOCK_ID
     }
 
     def "test get target url for short link code no checksum"() {
@@ -65,7 +65,7 @@ class ShortLinkServiceSpec extends Specification implements ServiceUnitTest<Shor
         notThrown Exception
         1 * service.checksumGenerator.checksumLength() >> 0
         1 * service.shortCodeGenerator.getId(_) >> MOCK_ID
-        1 * service.shortLinkProvider.resolveShortLink(_) >> targetUrl
+        1 * service.shortLinkProvider.resolve(_) >> targetUrl
     }
 
     def "test checksum matching"() {
@@ -82,7 +82,7 @@ class ShortLinkServiceSpec extends Specification implements ServiceUnitTest<Shor
         service.checksumGenerator.checksumLength() >> 1
         service.checksumGenerator.generate(_) >> { Long id -> return generatedChecksum }
         service.shortCodeGenerator.getId(_) >> { String parsedCode -> return (shortCode == parsedCode ? MOCK_ID : null) } //Awkward way to test short code parsing.
-        service.shortLinkProvider.resolveShortLink(_) >> targetUrl
+        service.shortLinkProvider.resolve(_) >> targetUrl
         String result = service.get("${shortCode}${urlChecksum}", new MockHttpServletRequest(), false)
 
         then:
@@ -113,6 +113,6 @@ class ShortLinkServiceSpec extends Specification implements ServiceUnitTest<Shor
         1 * service.clickTracker.track(_, _, _)
         1 * service.checksumGenerator.checksumLength() >> 0
         1 * service.shortCodeGenerator.getId(_) >> MOCK_ID
-        1 * service.shortLinkProvider.resolveShortLink(_) >> targetUrl
+        1 * service.shortLinkProvider.resolve(_) >> targetUrl
     }
 }
