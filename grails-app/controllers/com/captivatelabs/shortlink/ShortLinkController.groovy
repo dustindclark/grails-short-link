@@ -10,8 +10,10 @@ import org.springframework.http.HttpStatus
 class ShortLinkController implements GrailsConfigurationAware {
     ShortLinkService shortLinkService
     LinkGenerator grailsLinkGenerator
-    boolean redirectPermanent
-    String defaultServerUrl
+
+    private boolean redirectPermanent
+    private String defaultServerUrl
+    private String notFoundUrl
 
     def index() {
         if (!params.id) {
@@ -43,12 +45,17 @@ class ShortLinkController implements GrailsConfigurationAware {
     }
 
     private void notFound() {
-        render(text: "Not found", status: HttpStatus.NOT_FOUND)
+        if (notFoundUrl){
+            redirect(url: notFoundUrl)
+        } else {
+            render(text: "Not found", status: HttpStatus.NOT_FOUND)
+        }
     }
 
     @Override
     void setConfiguration(Config co) {
         redirectPermanent = co.getOrDefault('com.captivatelabs.shortlink.redirectPermanent', false)
+        notFoundUrl = co.get('com.captivatelabs.shortlink.notFoundUrl') ?: null
         defaultServerUrl = grailsLinkGenerator.serverBaseURL
     }
 }
