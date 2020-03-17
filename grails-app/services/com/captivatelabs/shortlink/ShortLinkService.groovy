@@ -3,10 +3,8 @@ package com.captivatelabs.shortlink
 
 import grails.config.Config
 import grails.core.support.GrailsConfigurationAware
-import grails.gorm.transactions.Transactional
 import grails.web.mapping.LinkGenerator
 import groovy.transform.CompileStatic
-import org.springframework.transaction.annotation.Propagation
 
 import javax.servlet.http.HttpServletRequest
 
@@ -14,6 +12,7 @@ import javax.servlet.http.HttpServletRequest
 class ShortLinkService implements GrailsConfigurationAware {
     LinkGenerator grailsLinkGenerator
     ShortCodeGenerator shortCodeGenerator
+    ShortLinkProvider shortLinkProvider
     ChecksumGenerator checksumGenerator
     ClickTracker clickTracker
     String baseUrl
@@ -25,23 +24,16 @@ class ShortLinkService implements GrailsConfigurationAware {
      * @return
      */
     String create(String targetUrl) {
-        ShortLink shortLink = save(targetUrl)
-        return getShortUrl(shortLink)
+        long id = shortLinkProvider.getId(targetUrl)
+        return getShortUrl(id)
     }
 
-    String getShortUrl(ShortLink shortLink) {
-        String shortCode = shortCodeGenerator.generate(shortLink.id)
+    String getShortUrl(long id) {
+        String shortCode = shortCodeGenerator.generate(id)
         if (baseUrl) {
             return "${baseUrl}${shortCode}"
         }
         return grailsLinkGenerator.link(controller: 'shortLink', id: shortCode, absolute: true)
-    }
-
-    @Transactional
-    ShortLink save(String targetUrl) {
-        ShortLink shortLink = new ShortLink(targetUrl: targetUrl)
-        shortLink.save(flush: true, failOnError: true)
-        return shortLink
     }
 
     /**
@@ -69,19 +61,18 @@ class ShortLinkService implements GrailsConfigurationAware {
                 throw new Exception("Checksum generated (${generatedChecksum}) != checksum in short code (${checksum}) for link id ${id} and short code ${shortCode}.")
             }
         }
-        ShortLink shortLink
-        ShortLink.withNewSession {
-            shortLink = ShortLink.get(id)
-            if (!shortLink) {
-                throw new ShortLinkNotFoundException("Short link not found for short code ${shortCode} which generated ID ${id}")
+        try {
+            String targetUrl = shortLinkProvider.resolveShortLink(id)
+
+            if (trackClick) {
+                clickTracker.track(id, targetUrl, request)
             }
-        }
 
-        if (trackClick) {
-            clickTracker.track(shortLink, request)
+            return targetUrl
+        } catch (Exception ex) {
+            log.error("Error resolving short link for code: ${shortCode}")
+            throw ex
         }
-
-        return shortLink.targetUrl
     }
 
     @Override

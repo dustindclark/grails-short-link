@@ -6,11 +6,11 @@ buildscript {
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:2.14.2"
-        classpath "org.grails.plugins:hibernate5:${gormVersion-".RELEASE"}"
+        classpath "org.grails.plugins:hibernate5:7.0.0"
     }
 }
 
-version System.getenv('TRAVIS_TAG') ?: "${System.getenv('bamboo_version') ?: '0.1'}.${System.getenv('bamboo_buildNumber') ?: '0-SNAPSHOT'}"
+version System.getenv('TRAVIS_TAG') ?: "${System.getenv('bamboo_version') ?: '0.2'}.${System.getenv('bamboo_buildNumber') ?: '0-SNAPSHOT'}"
 group "com.captivatelabs.grails.plugins"
 
 apply plugin: "eclipse"
@@ -41,17 +41,10 @@ dependencies {
     provided "org.grails:grails-plugin-services"
     provided "org.grails:grails-plugin-domain-class"
     testRuntime "org.grails.plugins:hibernate5"
-    testRuntime "org.hibernate:hibernate-core:5.1.5.Final"
+    testRuntime "org.hibernate:hibernate-core:5.4.0.Final"
     testCompile "org.grails:grails-gorm-testing-support"
-    testCompile "org.grails:grails-plugin-testing"
     testCompile "org.grails:grails-web-testing-support"
     testRuntime 'cglib:cglib-nodep:3.2.5'
     testRuntime "org.apache.tomcat:tomcat-jdbc"
     testRuntime "com.h2database:h2"
-}
-
-
-bootRun {
-    jvmArgs('-Dspring.output.ansi.enabled=always')
-    addResources = true
 }

@@ -26,7 +26,7 @@ abstract class ShortCodeGenerator implements GrailsConfigurationAware {
         }
         characterValues = new HashMap<Character, Integer>()
         dictionary.eachWithIndex { char c, int i ->
-            characterValues[c] = i
+            characterValues.put(c, i)
         }
     }
 }

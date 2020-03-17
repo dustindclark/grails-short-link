@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest
 @CompileStatic
 class NoClickTracker implements ClickTracker {
     @Override
-    void track(ShortLink shortLink, HttpServletRequest request) {
+    void track(long id, String targetUrl, HttpServletRequest request) {
         //No op
     }
 }

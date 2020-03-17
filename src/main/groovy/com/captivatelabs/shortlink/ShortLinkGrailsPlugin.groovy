@@ -10,6 +10,7 @@ class ShortLinkGrailsPlugin extends Plugin {
             checksumGenerator(NoChecksumGenerator)
             shortCodeGenerator(DefaultShortCodeGenerator)
             clickTracker(NoClickTracker)
+            shortLinkProvider(GormShortLinkProvider)
         }
     }
 }

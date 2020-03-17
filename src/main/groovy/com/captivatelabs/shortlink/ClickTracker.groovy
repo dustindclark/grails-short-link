@@ -19,5 +19,5 @@ import javax.servlet.http.HttpServletRequest
 
 @CompileStatic
 interface ClickTracker {
-    void track(ShortLink shortLink, HttpServletRequest request)
+    void track(long id, String targetUrl, HttpServletRequest request)
 }

@@ -8,9 +8,6 @@ String bintrayPassword = System.getenv("BINTRAY_PASSWORD") ?: project.hasPropert
 String artifactoryUsername = System.getenv("ARTIFACTORY_USER") ?:  project.hasProperty('artifactoryUsername') ? project.artifactoryUsername : null
 String artifactoryPassword = System.getenv("ARTIFACTORY_PASSWORD") ?: project.hasProperty('artifactoryPassword') ? project.artifactoryPassword : null
 
-// enable if you wish to package this plugin as a standalone application
-bootRepackage.enabled = false
-
 if(bintrayUser && bintrayUser) {
 	grailsPublish {
 		user = bintrayUser
